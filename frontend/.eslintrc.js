@@ -1,5 +1,5 @@
 module.exports = {
-  presets: ['react-app'],
+  extends: ['react-app'],
   rules: {
     'react-hooks/exhaustive-deps': 'warn',
   },
