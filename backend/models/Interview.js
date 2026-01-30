@@ -10,7 +10,7 @@ const interviewSchema = new mongoose.Schema(
     interviewType: {
       type: String,
       required: true,
-      enum: ['DSA', 'Aptitude', 'System Design', 'HR'],
+      enum: ['DSA', 'Technical', 'System Design', 'HR', 'Video Demo'],
       default: 'DSA',
     },
     difficulty: {

@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Interview from './pages/Interview';
 import Results from './pages/Results';
+import VideoSession from './pages/VideoSession';
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
@@ -38,6 +39,14 @@ function App() {
           element={
             <PrivateRoute>
               <Results />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/video-session"
+          element={
+            <PrivateRoute>
+              <VideoSession />
             </PrivateRoute>
           }
         />
