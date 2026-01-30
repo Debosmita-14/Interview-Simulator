@@ -1,0 +1,19 @@
+{
+  "name": "interview-simulator",
+  "version": "1.0.0",
+  "description": "AI-powered placement interview simulator",
+  "main": "backend/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm install",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "start": "node backend/server.js",
+    "start:frontend": "cd frontend && npm start"
+  },
+  "keywords": ["interview", "simulator", "ai", "placement", "dsa", "aptitude"],
+  "author": "",
+  "license": "MIT"
+}
