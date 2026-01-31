@@ -1,5 +1,6 @@
 const connectToDatabase = require('../_lib/config/database');
 const AuthService = require('../_lib/services/authService');
+const { isValidEmail } = require('../_lib/utils/validation');
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -29,22 +30,23 @@ module.exports = async (req, res) => {
     // Validate request body
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ 
-        message: 'Email and password are required',
-        errors: [
-          { field: 'email', message: email ? '' : 'Email is required' },
-          { field: 'password', message: password ? '' : 'Password is required' },
-        ].filter(e => e.message)
-      });
+    // Collect validation errors
+    const errors = [];
+
+    if (!email || email.trim() === '') {
+      errors.push({ field: 'email', message: 'Email is required' });
+    } else if (!isValidEmail(email)) {
+      errors.push({ field: 'email', message: 'Valid email is required' });
+    }
+    
+    if (!password) {
+      errors.push({ field: 'password', message: 'Password is required' });
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (errors.length > 0) {
       return res.status(400).json({ 
-        message: 'Valid email is required',
-        errors: [{ field: 'email', message: 'Valid email is required' }]
+        message: errors[0].message,
+        errors
       });
     }
 

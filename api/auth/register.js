@@ -1,5 +1,6 @@
 const connectToDatabase = require('../_lib/config/database');
 const AuthService = require('../_lib/services/authService');
+const { isValidEmail, isValidPassword } = require('../_lib/utils/validation');
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -29,31 +30,29 @@ module.exports = async (req, res) => {
     // Validate request body
     const { name, email, password, targetRole } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ 
-        message: 'Name, email, and password are required',
-        errors: [
-          { field: 'name', message: name ? '' : 'Name is required' },
-          { field: 'email', message: email ? '' : 'Email is required' },
-          { field: 'password', message: password ? '' : 'Password is required' },
-        ].filter(e => e.message)
-      });
+    // Collect validation errors
+    const errors = [];
+
+    if (!name || name.trim() === '') {
+      errors.push({ field: 'name', message: 'Name is required' });
+    }
+    
+    if (!email || email.trim() === '') {
+      errors.push({ field: 'email', message: 'Email is required' });
+    } else if (!isValidEmail(email)) {
+      errors.push({ field: 'email', message: 'Valid email is required' });
+    }
+    
+    if (!password) {
+      errors.push({ field: 'password', message: 'Password is required' });
+    } else if (!isValidPassword(password, 6)) {
+      errors.push({ field: 'password', message: 'Password must be at least 6 characters' });
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (errors.length > 0) {
       return res.status(400).json({ 
-        message: 'Valid email is required',
-        errors: [{ field: 'email', message: 'Valid email is required' }]
-      });
-    }
-
-    // Password length validation
-    if (password.length < 6) {
-      return res.status(400).json({ 
-        message: 'Password must be at least 6 characters',
-        errors: [{ field: 'password', message: 'Password must be at least 6 characters' }]
+        message: errors[0].message,
+        errors
       });
     }
 

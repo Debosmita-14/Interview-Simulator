@@ -8,8 +8,12 @@ async function connectToDatabase() {
     return cachedConnection;
   }
 
+  if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI environment variable is not set');
+  }
+
   try {
-    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/interview-simulator';
+    const uri = process.env.MONGODB_URI;
     
     // Mongoose maintains a global connection, so we can safely connect
     if (mongoose.connection.readyState === 0) {
